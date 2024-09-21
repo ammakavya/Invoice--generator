@@ -487,22 +487,22 @@ const InvoiceComponent = () => {
       </Button>
       <Box sx={{ marginTop: '20px', textAlign: 'right' }}>
         <Box sx={{display:'flex',ml: '30rem'}}>
-        <Typography>Sub Total</Typography><Typography sx={{ml:"5rem"}}> ₹{subtotal.toFixed(2)}</Typography>
+        <Typography>Sub Total</Typography><Typography sx={{ml:"10rem"}}> ₹{subtotal.toFixed(2)}</Typography>
         </Box>
-<Box sx={{display:'flex',ml: '20rem'}}>
+<Box sx={{display:'flex',ml: '30rem'}}>
   <Typography>
     SGST ({taxes.sgstRate}%) </Typography>
-    <Typography sx={{ml:"5rem"}}>₹{totalSGST.toFixed(2)}</Typography>
+    <Typography sx={{ml:"10rem"}}>₹{totalSGST.toFixed(2)}</Typography>
     </Box>
-<Box sx={{display:'flex',ml: '20rem'}}>
+<Box sx={{display:'flex',ml: '30rem'}}>
   <Typography >
     CGST ({taxes.cgstRate}%)
   </Typography>
-  <Typography sx={{ml:"5rem"}}>₹{totalCGST.toFixed(2)}</Typography>
+  <Typography sx={{ml:"10rem"}}>₹{totalCGST.toFixed(2)}</Typography>
   </Box>
 <Box sx={{display:'flex'}}>
-<TextField label="total" size='small'sx={{ml: '20rem'}} inputprops={{ sx: { height: '30px', fontWeight:"bold" } }}/>
-<Typography variant="h6" sx={{ fontWeight: 'bold',ml:'5rem' }}>
+<TextField label="total" size='small'sx={{ml: '30rem'}} inputprops={{ sx: { height: '30px', fontWeight:"bold" } }}/>
+<Typography variant="h6" sx={{ fontWeight: 'bold',ml:'10rem' }}>
   ₹{totalAmount.toFixed(2)}
   </Typography>
 </Box>

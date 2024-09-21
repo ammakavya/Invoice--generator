@@ -1,7 +1,8 @@
 .App {
   text-align: center;
   margin: 1rem;
-  display: -ms-flexbox;
+  display: flex;
+  margin
 }
 
 .App-logo {

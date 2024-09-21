@@ -32,11 +32,14 @@ const MyComponent = () => {
   };
 
   return (
-    <div>
+    <div className='app'>
       <div id="pdfContent">
     <InvoiceComponent/>
       </div>
+      <div>
       <button onClick={generatePDF}>Generate PDF</button>
+      </div>
+     
     </div>
   );
 };

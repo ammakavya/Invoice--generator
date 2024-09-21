@@ -15,17 +15,14 @@ import { useDropzone } from 'react-dropzone';
 import {useForm} from 'react-hook-form'
 import html2pdf  from 'html2pdf.js';
 
-
-
 const InvoiceComponent = () => {
   
-
   const defaultValues = {
     yourCompany: "",
     YourCompanyName: "",
       companysGSTIN : "",
       companyAddress: "",
-      city: "",
+      City: "",
       state: "",
       india: "",
       BillTo: "",
@@ -63,18 +60,34 @@ const InvoiceComponent = () => {
        {  label: 'Uttar Pradesh'},
        {  label:  'West Bengal'}
     ]
-   const { register, handleSubmit } = useForm({ defaultValues });
-    console.log("inside forms");
+   const { register, handleSubmit, watch} = useForm({ defaultValues });
+   const [data, setData] = useState({});
+   const onSubmit = (formData) => {
+    setData(formData);
+  };
+    console.log(setData);
     const [isFocused, setIsFocused] = useState(false);
+
     const [count, setCount] = useState(0);
     const [logo, setLogo] = useState();
     const [taxes, setTaxes] = useState({ sgstRate: 6, cgstRate: 6 });
     const [items, setItems] = useState([
       { id: 1, description: 'Brochure Design', qty: 2, rate: 100, sgst: 6, cgst: 6, cess: 0, amount: 200 },
     ]);
-    const onSubmit = (data) => {
-        console.log("form submitted", data)
-    }
+    
+    const generatePDF = () => {
+      const pdfContent = document.getElementById('pdfContent');
+      const opt = {
+        margin:       0.5,
+        filename:     'invoice.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(pdfContent).set(opt).save();
+    };
+  
+    const watchFields = watch(); 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
@@ -103,23 +116,11 @@ const InvoiceComponent = () => {
     const totalSGST = items.reduce((sum, item) => sum + item.sgst, 0);
     const totalCGST = items.reduce((sum, item) => sum + item.cgst, 0);
     const totalAmount = subtotal + totalSGST + totalCGST;
-    const handleGeneratePDF = () => {
-      const element = document.getElementById('pdfContent'); // Correct element ID
-      const options = {
-       width:'110h',
-        filename: 'invoice.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 3 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-      };
-    
-      html2pdf().from(element).set(options).save();
-    };
-
+   
   return (
     <div  id="pdfContent">
       <Box sx={{display:'flex'}}>
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form   onSubmit={handleSubmit(generatePDF)}>
       <FormControl>
       
         <Paper  elevation ={3}sx={{ height: '200vh', margin: '2%',width:'100vh', border:'1px solid skyblue'}}>
@@ -153,6 +154,7 @@ const InvoiceComponent = () => {
               </Typography>
             </Grid>
             <Grid item md={6} sx={{marginTop:'20px'}}>
+           
           <TextField  size='small' placeholder="Your Company"  {...register("yourCompany")}  sx={{padding:'1px',marginRight:'45%', '& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -164,7 +166,8 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },
-}}  inputprops={{ sx: { height: '30px' } }}/>
+}}  inputprops={{ sx: { height: '30px' } }}/>  
+ {watchFields.YourName && (
           <TextField size='small' placeholder=" Your Name"  {...register("YourName")}  sx={{padding:'1px',marginRight:'45%',fontSize:'18px','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -175,7 +178,8 @@ const InvoiceComponent = () => {
         },
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
-        },}}  inputprops={{ sx: { height: '18px' } }}/>
+        },}}  inputprops={{ sx: { height: '18px' } }}/>)}
+        
           <TextField size='small' placeholder="company's GSTIN" {...register("companysGSTIN")}  sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -187,6 +191,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}  inputprops={{ sx: { height: '30px' } }}/>
+       
           <TextField size='small' placeholder="company Address" {...register("companyAddress")} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -198,6 +203,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}} inputprops={{ sx: { height: '30px' } }} />
+       
           <TextField size='small' placeholder="city"  {...register("city")}sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -209,6 +215,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}} inputprops={{ sx: { height: '30px' } }} />
+      
           <TextField size='small' placeholder="state" {...register("state")} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -220,6 +227,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}  inputprops={{ sx: { height: '30px' } }}/>
+      
           <TextField size='small' placeholder="india" {...register("india")} sx={{padding:'1px',marginRight:'45%',
             '& .MuiOutlinedInput-root': {
           '& fieldset': {
@@ -238,6 +246,7 @@ const InvoiceComponent = () => {
           <Box sx={{mt:"4%"}}> 
         <Grid container > 
       <Grid  item md={6}>
+        
 <TextField  inputprops={{ sx: { height: '20px' } }} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -248,7 +257,8 @@ const InvoiceComponent = () => {
         },
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
-        },}} size='small' placeholder= 'Bill To:' {...register("BillTo")} />
+        },}} size='small' placeholder= 'Bill To:' {...register("BillTo")} />  
+          
 <TextField  inputprops={{ sx: { height: '20px' } }} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -260,6 +270,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}size='small' placeholder= 'Your Client Company' {...register("YourClientCompany")} />
+       
 <TextField inputprops={{ sx: { height: '30px' } }} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -271,6 +282,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}} size='small' placeholder= 'Client`s GSTIN'  {...register("ClientsGSTIN")} />
+       
 <TextField inputprops={{ sx: { height: '30px' } }} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -282,6 +294,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}size='small' placeholder= 'Client Address'  {...register("ClientAddress")}/>
+          
 <TextField inputprops={{ sx: { height: '30px' } }}  sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -293,6 +306,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}size='small' placeholder= 'City'  {...register("City")}/>
+      
 <TextField inputprops={{ sx: { height: '30px' } }} sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -304,6 +318,7 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}size='small' placeholder= 'State'  {...register("State")}/>
+        
 <TextField  inputprops={{ sx: { height: '30px' } }}sx={{padding:'1px',marginRight:'45%','& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'transparent', // Hide the border by default
@@ -538,16 +553,9 @@ const InvoiceComponent = () => {
         '& .Mui-focused fieldset': {
           borderColor: 'blue', // Show border when focused
         },}}size='small' placeholder= 'place make the payment by due date'  fullWidth {...register("termsdesc")}/>
-          <Button type="submit" sx={{ marginTop: "20px" }}>
-                Submit
-              </Button>
+          
         </Paper>
-      
-    
       </FormControl>
-      
-      <Button onClick={handleGeneratePDF} sx={{ marginTop: '20px', marginLeft:'100px' }}>Download as PDF</Button>
-      
       </form  >
       </Box>
     </div>

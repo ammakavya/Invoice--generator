@@ -120,10 +120,10 @@ const InvoiceComponent = () => {
   return (
     <div  id="pdfContent">
       <Box sx={{display:'flex'}}>
-    <form   onSubmit={handleSubmit(generatePDF)}>
+    <form   onSubmit={handleSubmit()}>
       <FormControl>
       
-        <Paper  elevation ={3}sx={{ height: '200vh', margin: '2%',width:'100vh', border:'1px solid skyblue'}}>
+        <Paper  elevation ={3}sx={{ height: '220vh', margin: '2%',width:'110vh', border:'1px solid skyblue'}}>
           <Grid container spacing={1}>
           <Grid item md={6}>
   <Box
